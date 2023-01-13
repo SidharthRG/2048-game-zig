@@ -1,5 +1,5 @@
 # 2048 Game
-This is an implementation of the [2048 Game](https://2048game.com) in the [Zig](https://ziglang.org) programming language.
+This is an implementation of the [2048 Game](https://2048game.com) in the [Zig](https://ziglang.org) programming language, and runs entirely in the terminal.
 
 ---
 __From the website__:

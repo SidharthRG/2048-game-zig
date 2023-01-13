@@ -22,10 +22,10 @@ pub fn main() !void {
 
             const char = tio.getKey();
             const valid = switch (char) {
-                'i' => game.reduceUp(),
-                'j' => game.reduceLeft(),
-                'k' => game.reduceDown(),
-                'l' => game.reduceRight(),
+                'i', 'w' => game.reduceUp(),
+                'j', 'a' => game.reduceLeft(),
+                'k', 's' => game.reduceDown(),
+                'l', 'd' => game.reduceRight(),
                 else => continue :inner,
             };
             
