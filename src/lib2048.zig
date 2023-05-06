@@ -6,8 +6,8 @@ const stdout = std.io.getStdOut().writer();
 
 pub fn init() void {
     score = 0;
-    std.mem.set(u16, &board, 0);
-    std.mem.set(u16, &old_board, 0);
+    @memset(&board, 0);
+    @memset(&old_board, 0);
 
     prng = std.rand.DefaultPrng.init(blk: {
         var seed: u64 = undefined;
@@ -34,7 +34,7 @@ pub fn printBoard() !void {
     try stdout.print("+{s}+\n|{s}| {d}\n|", .{ border, empty, score });
 
     var j: usize = 0;
-    for (board) |cell, i| {
+    for (board, 0..) |cell, i| {
         if (cell == 0)
             try stdout.print("      ", .{})
         else

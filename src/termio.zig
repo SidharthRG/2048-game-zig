@@ -37,7 +37,7 @@ pub fn getKey() u8 {
 
 fn kbhit() bool {
     var read_fds: C.fd_set = undefined;
-    std.mem.set(c_int, &read_fds.fds_bits, 0);
+    @memset(&read_fds.fds_bits, 0);
     C.FD_SET(std.os.STDIN_FILENO, &read_fds);
 
     var timeout: C.timeval = undefined;
