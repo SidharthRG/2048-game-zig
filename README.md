@@ -11,7 +11,7 @@ __From the website__:
 Development was done using a nightly build from the Zig website, using an Apple MacBook Air (M2).
 ```shell
 $ zig version
-0.11.0-dev.824+b3f4e0d09
+0.11.0-dev.2985+3f3b1a680
 ```
 Windows support has not been added yet, though I intend to work on that in the future.
 
@@ -22,9 +22,9 @@ $ zig build
 $ ./zig-out/bin/2048-game
 ```
 This will generate a debug build. The following options are also available for smaller and/or faster executables:
-* `-Drelease-safe`
-* `-Drelease-small`
-* `-Drelease-fast`
+* `-Doptimize=ReleaseSafe`
+* `-Doptimize=ReleaseSmall`
+* `-Doptimize=ReleaseFast`
 
 Cross-platform builds need the `target` parameter. For example, to target x64 Linux and GNU ABI:
 ```shell
