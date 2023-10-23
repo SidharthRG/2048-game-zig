@@ -4,16 +4,16 @@ This is an implementation of the [2048 Game](https://2048game.com) in the [Zig](
 ---
 __From the website__:
 
-2048 is an easy and fun puzzle game...It is played on a 4x4 grid... Every time you press a key - all tiles slide. Tiles with the same value that bump into one-another are merged...
+> 2048 is an easy and fun puzzle game...It is played on a 4x4 grid... Every time you press a key - all tiles slide. Tiles with the same value that bump into one-another are merged...
 
 ---
 ## Usage
-Development was done using a nightly build from the Zig website, using an Apple MacBook Air (M2).
+Development was done using the latest release of Zig, and on an Apple MacBook Air (M2).
 ```shell
 $ zig version
-0.11.0-dev.2985+3f3b1a680
+0.11.0
 ```
-Windows support has not been added yet, though I intend to work on that in the future.
+Windows/Linux support has not been added yet, though I intend to work on that in the future.
 
 ### Building and running
 Run the command `zig build` from the root directory. The executable file will be created in `./zig-out/bin`.

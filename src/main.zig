@@ -26,14 +26,18 @@ pub fn main() !void {
                 'j', 'a' => game.reduceLeft(),
                 'k', 's' => game.reduceDown(),
                 'l', 'd' => game.reduceRight(),
+                'x', 'X' => {
+                    try stdout.print("Game terminated by user.\n", .{});
+                    break :inner;
+                },
                 else => continue :inner,
             };
-            
+
             if (game.isGameOver()) {
                 try stdout.print("Game Over!\n", .{});
                 break :inner;
             }
-            
+
             if (valid) {
                 game.addNext();
             }

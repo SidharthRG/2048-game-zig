@@ -1,6 +1,6 @@
 const std = @import("std");
 
-const sort = std.sort.sort;
+const sort = std.sort.insertion;
 const stdin = std.io.getStdIn().reader();
 const stdout = std.io.getStdOut().writer();
 
@@ -108,11 +108,9 @@ pub fn isGameOver() bool {
             transpose();
         }
         return false;
-    }
-    else if(std.mem.containsAtLeast(u16, board[0..], 1, &[_]u16{2048})) {
+    } else if (std.mem.containsAtLeast(u16, board[0..], 1, &[_]u16{2048})) {
         return true;
-    }
-    else {
+    } else {
         return false;
     }
 }
@@ -127,18 +125,18 @@ const Direction = enum {
     right,
 };
 
-const Colors = enum(u8) {
-    white = 1,
-    bold_white,
-    cyan,
-    bold_cyan,
-    magenta,
-    bold_magenta,
-    blue,
-    bold_blue,
-    yellow,
-    bold_yellow,
-    bold_red,
+const Colors = enum(u16) {
+    white = 2,
+    bold_white = 4,
+    cyan = 8,
+    bold_cyan = 16,
+    magenta = 32,
+    bold_magenta = 64,
+    blue = 128,
+    bold_blue = 256,
+    yellow = 512,
+    bold_yellow = 1024,
+    bold_red = 2048,
 
     fn getCode(self: Colors) []const u8 {
         return switch (self) {
@@ -158,7 +156,7 @@ const Colors = enum(u8) {
 };
 
 fn getColor(n: u16) []const u8 {
-    return @intToEnum(Colors, std.math.log2(n)).getCode();
+    return @as(Colors, @enumFromInt(n)).getCode();
 }
 
 fn blanksToEnd(context: Direction, lhs: u16, rhs: u16) bool {
@@ -195,6 +193,7 @@ fn hasAdjacentEql() bool {
 }
 
 fn reduce(comptime context: Direction, list: []u16) void {
+    // std.debug.assert(list.len == 4);
     sort(u16, list, context, blanksToEnd);
     switch (context) {
         .left => {
