@@ -55,3 +55,7 @@ pub fn main() !void {
     // Restore buffering
     tio.restoreInputBuffering();
 }
+
+test {
+    std.testing.refAllDecls(game);
+}

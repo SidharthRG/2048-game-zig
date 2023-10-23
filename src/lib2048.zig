@@ -115,6 +115,30 @@ pub fn isGameOver() bool {
     }
 }
 
+test "game over" {
+    var test_board = [_]u16{
+        2,  32,  512,  64,
+        4,  64,  1024, 8,
+        8,  128, 256,  2,
+        16, 256, 4,    16,
+    };
+    setBoard(&test_board);
+    try std.testing.expect(isGameOver());
+
+    test_board[1] = 64;
+    setBoard(&test_board);
+    try std.testing.expect(!isGameOver());
+
+    var done_board = [_]u16{
+        2,  32,  16,   64,
+        4,  64,  2048, 8,
+        8,  128, 0,    2,
+        16, 0,   4,    16,
+    };
+    setBoard(&done_board);
+    try std.testing.expect(isGameOver());
+}
+
 var score: u16 = undefined;
 var board: [16]u16 = undefined;
 var old_board: [16]u16 = undefined;
@@ -159,6 +183,24 @@ fn getColor(n: u16) []const u8 {
     return @as(Colors, @enumFromInt(n)).getCode();
 }
 
+test "colors for printing the board" {
+    try std.testing.expectEqualSlices(u8, "\x1B[0;37m", getColor(2));
+    try std.testing.expectEqualSlices(u8, "\x1B[1;37m", getColor(4));
+    try std.testing.expectEqualSlices(u8, "\x1B[0;36m", getColor(8));
+    try std.testing.expectEqualSlices(u8, "\x1B[1;36m", getColor(16));
+    try std.testing.expectEqualSlices(u8, "\x1B[0;35m", getColor(32));
+    try std.testing.expectEqualSlices(u8, "\x1B[1;35m", getColor(64));
+    try std.testing.expectEqualSlices(u8, "\x1B[0;34m", getColor(128));
+    try std.testing.expectEqualSlices(u8, "\x1B[1;34m", getColor(256));
+    try std.testing.expectEqualSlices(u8, "\x1B[0;33m", getColor(512));
+    try std.testing.expectEqualSlices(u8, "\x1B[1;33m", getColor(1024));
+    try std.testing.expectEqualSlices(u8, "\x1B[1;31m", getColor(2048));
+}
+
+fn setBoard(input: []u16) void {
+    @memcpy(&board, input[0..]);
+}
+
 fn blanksToEnd(context: Direction, lhs: u16, rhs: u16) bool {
     if (lhs != 0 and rhs != 0) {
         return false;
@@ -168,6 +210,20 @@ fn blanksToEnd(context: Direction, lhs: u16, rhs: u16) bool {
             .right => if (rhs == 0) false else true,
         };
     }
+}
+
+test "sort comparison function" {
+    // non-zero numbers are not swapped
+    try std.testing.expect(!blanksToEnd(Direction.left, 2, 4));
+    try std.testing.expect(!blanksToEnd(Direction.right, 2, 4));
+
+    // leftward reduction will swap if rhs is 0
+    try std.testing.expect(blanksToEnd(Direction.left, 2, 0));
+    try std.testing.expect(!blanksToEnd(Direction.left, 0, 2));
+
+    // rightward reduction will swap if rhs is not 0
+    try std.testing.expect(!blanksToEnd(Direction.right, 2, 0));
+    try std.testing.expect(blanksToEnd(Direction.right, 0, 2));
 }
 
 fn transpose() void {
@@ -180,9 +236,20 @@ fn transpose() void {
     }
 }
 
+test "Transpose the board" {
+    var test_board = [_]u16{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+    const tr_board = [_]u16{ 1, 5, 9, 13, 2, 6, 10, 14, 3, 7, 11, 15, 4, 8, 12, 16 };
+    setBoard(&test_board);
+    transpose();
+    try std.testing.expectEqualSlices(u16, &tr_board, &board);
+
+    transpose();
+    try std.testing.expectEqualSlices(u16, &test_board, &board);
+}
+
 fn hasAdjacentEql() bool {
     var i: usize = 0;
-    while (i < 3) : (i += 1) {
+    while (i <= 3) : (i += 1) {
         var j: usize = 0;
         while (j < 3) : (j += 1) {
             if (board[4 * i + j] == board[4 * i + j + 1])
@@ -190,6 +257,16 @@ fn hasAdjacentEql() bool {
         }
     }
     return false;
+}
+
+test "equal, adjacent entries" {
+    var test_board = [_]u16{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
+    setBoard(&test_board);
+    try std.testing.expect(!hasAdjacentEql());
+
+    test_board[14] = 16;
+    setBoard(&test_board);
+    try std.testing.expect(hasAdjacentEql());
 }
 
 fn reduce(comptime context: Direction, list: []u16) void {
@@ -225,4 +302,14 @@ fn reduce(comptime context: Direction, list: []u16) void {
         },
     }
     sort(u16, list, context, blanksToEnd);
+}
+
+test "reduce a row on the board (left/right)" {
+    var my_list_left = [_]u16{ 0, 2, 0, 2 };
+    reduce(Direction.left, &my_list_left);
+    try std.testing.expectEqualSlices(u16, &my_list_left, &[_]u16{ 4, 0, 0, 0 });
+
+    var my_list_right = [_]u16{ 0, 2, 0, 2 };
+    reduce(Direction.right, &my_list_right);
+    try std.testing.expectEqualSlices(u16, &my_list_right, &[_]u16{ 0, 0, 0, 4 });
 }
