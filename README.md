@@ -38,4 +38,16 @@ $ zig run ./src/main.zig
 ```
 
 ### Testing
-(WIP) Tests have not been added yet.
+The unit tests can be run using the `test` command provided by Zig:
+``` shell
+$ zig test ./src/main.zig
+All 11 tests passed.
+```
+
+## TODO
+- [ ] Add Windows/Linux support
+- [ ] Improve the UI: add a header, instructions etc. 
+- [ ] Write more detailed tests.
+
+## License
+Licensed under the [MIT](LICENSE) License.

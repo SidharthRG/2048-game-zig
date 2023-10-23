@@ -58,6 +58,26 @@ pub fn reduceUp() bool {
     return op;
 }
 
+test "reduce up" {
+    var test_board = [_]u16{
+        0,  0,  4, 2,
+        0,  0,  4, 8,
+        0,  0,  8, 8,
+        16, 16, 4, 16,
+    };
+
+    const res_board = [_]u16{
+        16, 16, 8, 2,
+        0,  0,  8, 16,
+        0,  0,  4, 16,
+        0,  0,  0, 0,
+    };
+
+    setBoard(&test_board);
+    _ = reduceUp();
+    try std.testing.expectEqualSlices(u16, &res_board, &board);
+}
+
 pub fn reduceDown() bool {
     transpose();
     const op = reduceRight();
@@ -65,8 +85,28 @@ pub fn reduceDown() bool {
     return op;
 }
 
+test "reduce down" {
+    var test_board = [_]u16{
+        0,  0,  4, 2,
+        0,  0,  4, 8,
+        0,  0,  8, 8,
+        16, 16, 4, 16,
+    };
+
+    const res_board = [_]u16{
+        0,  0,  0, 0,
+        0,  0,  8, 2,
+        0,  0,  8, 16,
+        16, 16, 4, 16,
+    };
+
+    setBoard(&test_board);
+    _ = reduceDown();
+    try std.testing.expectEqualSlices(u16, &res_board, &board);
+}
+
 pub fn reduceLeft() bool {
-    std.mem.copy(u16, old_board[0..], board[0..]);
+    @memcpy(old_board[0..], board[0..]);
 
     var i: usize = 0;
     while (i < 16) : (i += 4) {
@@ -76,8 +116,28 @@ pub fn reduceLeft() bool {
     return !std.mem.eql(u16, old_board[0..], board[0..]);
 }
 
+test "reduce left" {
+    var test_board = [_]u16{
+        0,  0,  2, 2,
+        0,  0,  4, 4,
+        0,  0,  8, 8,
+        16, 16, 4, 16,
+    };
+
+    const res_board = [_]u16{
+        4,  0, 0,  0,
+        8,  0, 0,  0,
+        16, 0, 0,  0,
+        32, 4, 16, 0,
+    };
+
+    setBoard(&test_board);
+    _ = reduceLeft();
+    try std.testing.expectEqualSlices(u16, &res_board, &board);
+}
+
 pub fn reduceRight() bool {
-    std.mem.copy(u16, old_board[0..], board[0..]);
+    @memcpy(old_board[0..], board[0..]);
 
     var i: usize = 0;
     while (i < 16) : (i += 4) {
@@ -85,6 +145,26 @@ pub fn reduceRight() bool {
     }
 
     return !std.mem.eql(u16, old_board[0..], board[0..]);
+}
+
+test "reduce right" {
+    var test_board = [_]u16{
+        2,  2,   0, 0,
+        4,  4,   0, 0,
+        8,  8,   0, 0,
+        16, 256, 4, 16,
+    };
+
+    const res_board = [_]u16{
+        0,  0,   0, 4,
+        0,  0,   0, 8,
+        0,  0,   0, 16,
+        16, 256, 4, 16,
+    };
+
+    setBoard(&test_board);
+    _ = reduceRight();
+    try std.testing.expectEqualSlices(u16, &res_board, &board);
 }
 
 pub fn addNext() void {
