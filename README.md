@@ -8,10 +8,10 @@ __From the website__:
 
 ---
 ## Usage
-Development was done using the latest release of Zig, and on an Apple MacBook Air (M2).
+Development was done using the latest nightly build of Zig, and on an Apple MacBook Air (M2).
 ```shell
 $ zig version
-0.11.0
+0.13.0-dev.245+5fe9f88b1
 ```
 Windows/Linux support has not been added yet, though I intend to work on that in the future.
 
