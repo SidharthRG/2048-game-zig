@@ -9,7 +9,7 @@ pub fn init() void {
     @memset(&board, 0);
     @memset(&old_board, 0);
 
-    prng = std.rand.DefaultPrng.init(blk: {
+    prng = std.Random.DefaultPrng.init(blk: {
         var seed: u64 = undefined;
         std.posix.getrandom(std.mem.asBytes(&seed)) catch unreachable;
         break :blk seed;
@@ -222,7 +222,7 @@ test "game over" {
 var score: u16 = undefined;
 var board: [16]u16 = undefined;
 var old_board: [16]u16 = undefined;
-var prng: std.rand.Xoshiro256 = undefined;
+var prng: std.Random.Xoshiro256 = undefined;
 
 const Direction = enum {
     left,
